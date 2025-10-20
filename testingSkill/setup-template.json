@@ -1,0 +1,23 @@
+{
+  "name": "playwright-testing-setup",
+  "description": "Testing setup template for the Claude Code Testing Skill",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@axe-core/playwright": "^4.8.0"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:accessibility": "playwright test tests/accessibility.spec.ts",
+    "test:ux": "playwright test tests/ux-principles.spec.ts",
+    "test:functional": "playwright test tests/functional.spec.ts",
+    "test:report": "playwright show-report",
+    "test:ui": "playwright test --ui"
+  },
+  "notes": {
+    "installation": "Run: npm install -D @playwright/test @axe-core/playwright",
+    "browsers": "Run: npx playwright install",
+    "config": "Copy playwright.config.template.ts to your project root as playwright.config.ts"
+  }
+}
