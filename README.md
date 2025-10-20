@@ -13,12 +13,15 @@ This directory contains a complete skill-based workflow system for autonomous fe
 | **standards** | Analyzes codebase to document coding standards and conventions | `docs/coding-standards.md` |
 | **pm** | Creates PRDs with user stories for brownfield enhancements | `docs/prd.md`, `docs/stories/*.md` |
 | **dev** | Implements user stories following standards and architecture | Code files, tests, updated story files |
+| **sdet** | Creates e2e tests, evaluates test coverage, identifies gaps, builds test infrastructure | E2E tests, test utilities, coverage reports |
 | **qa** | Tests implementation and creates quality gate decisions | `docs/qa-gates/*.yml`, updated story files |
 | **feature-delivery** | Orchestrates complete workflow: architecture → standards → PM → dev → QA | All above + delivery report |
 
-### The Testing Skill
+### Testing Skills
 
 The **testing** skill was created separately and is used by the QA skill to execute tests. It lives in the parent directory structure and handles test execution and reporting.
+
+The **sdet** skill focuses on building comprehensive test automation infrastructure, creating end-to-end tests, evaluating test coverage, and identifying testing gaps. It complements the QA skill by building the test suites that QA executes.
 
 ## How It Works
 
@@ -144,6 +147,13 @@ Skill(command: "dev")
 # Output: Implemented code + tests
 ```
 
+**Create E2E Tests & Evaluate Coverage**:
+```bash
+Skill(command: "sdet")
+# Analyzes codebase and creates comprehensive test suites
+# Output: E2E tests, coverage report, test infrastructure
+```
+
 **QA Validation**:
 ```bash
 Skill(command: "qa")
@@ -191,6 +201,24 @@ Skill(command: "feature-delivery")
 3. Selectively start dev on stories
 ```
 
+**Test-First Development with SDET**:
+```bash
+# Build comprehensive test suite before or after feature implementation
+1. Skill(command: "sdet")         # Analyze app and create test strategy
+   # Outputs: Test coverage report, identifies gaps
+2. Skill(command: "sdet")         # Create e2e tests for critical flows
+   # Outputs: E2E test suites, page objects, test utilities
+3. Skill(command: "dev")          # Implement features
+4. Skill(command: "qa")           # Run tests and validate
+   # Uses tests created by SDET
+
+# Or evaluate existing test coverage
+1. Skill(command: "sdet")         # Analyze current test coverage
+   # Outputs: Coverage report with gap analysis
+2. Review recommendations
+3. Skill(command: "sdet")         # Create tests for identified gaps
+```
+
 ## Outputs & Artifacts
 
 ### Directory Structure Created
@@ -201,6 +229,9 @@ docs/
 ├── coding-standards.md          # From standards skill
 ├── prd.md                       # From PM skill
 ├── jira-mapping.json            # From JIRA skill (if used)
+├── test-coverage-report.md      # From SDET skill
+├── test-strategy.md             # From SDET skill
+├── test-maintenance.md          # From SDET skill
 ├── stories/                     # From PM or JIRA skill
 │   ├── 1.1.dark-mode-toggle.md
 │   ├── 1.2.theme-persistence.md
@@ -209,6 +240,8 @@ docs/
 │   ├── 1.1-dark-mode-toggle.yml
 │   ├── 1.2-theme-persistence.yml
 │   └── 1.3-theme-styles.yml
+├── sdet-reports/                # From SDET skill
+│   └── 2024-10-19-test-report.md
 └── delivery-reports/            # From feature-delivery skill
     └── dark-mode-2024-10-19.md
 ```
@@ -219,13 +252,25 @@ docs/
 src/                             # From dev skill
 ├── components/
 │   ├── ThemeToggle.tsx         # New
-│   ├── ThemeToggle.test.tsx    # New
+│   ├── ThemeToggle.test.tsx    # New (unit tests)
 │   └── Settings.tsx            # Modified
 ├── hooks/
 │   ├── useTheme.ts             # New
-│   └── useTheme.test.ts        # New
+│   └── useTheme.test.ts        # New (unit tests)
 └── context/
     └── ThemeContext.tsx        # New
+
+tests/                           # From SDET skill
+├── e2e/
+│   ├── theme-toggle.spec.ts    # New (e2e tests)
+│   └── settings-flow.spec.ts   # New (e2e tests)
+├── integration/
+│   └── api/theme.test.ts       # New (API tests)
+├── pages/
+│   ├── SettingsPage.ts         # New (page objects)
+│   └── ThemePage.ts            # New (page objects)
+└── helpers/
+    └── test-utils.ts           # New (test utilities)
 ```
 
 ## Key Features
